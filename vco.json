@@ -1,0 +1,148 @@
+{
+  "nodes": [
+    {
+      "name": "ocp1",
+      "pm_addr": "192.0.4.125",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:controller-0,profile:control,boot_option:local"
+    },
+    {
+      "name": "ocp2",
+      "pm_addr": "192.0.4.126",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:controller-1,profile:control,boot_option:local"
+    },
+    {
+      "name": "ocp3",
+      "pm_addr": "192.0.4.127",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:controller-2,profile:control,boot_option:local"
+    },
+    {
+      "name": "ocp4",
+      "pm_addr": "192.0.4.128",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:boot_option:local"
+    },
+    {
+      "name": "ocp5",
+      "pm_addr": "192.0.4.129",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:boot_option:local"
+    },
+    {
+      "name": "ocp6",
+      "pm_addr": "192.0.4.130",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-0,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "ocp7",
+      "pm_addr": "192.0.4.131",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "boot_option:local"
+    },
+    {
+      "name": "ocp8",
+      "pm_addr": "192.0.4.132",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-1,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "ocp9",
+      "pm_addr": "192.0.4.133",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-2,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "ocp10",
+      "pm_addr": "192.0.4.134",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-3,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "ocp11",
+      "pm_addr": "192.0.4.135",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-4,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "ocp12",
+      "pm_addr": "192.0.4.136",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:cephstorage-5,profile:ceph-storage,boot_option:local"
+    },
+    {
+      "name": "gp1",
+      "pm_addr": "192.0.4.137",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:boot_option:local"
+    },
+    {
+      "name": "gp2",
+      "pm_addr": "192.0.4.138",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:boot_option:local"
+    },
+    {
+      "name": "gp3",
+      "pm_addr": "192.0.4.139",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:boot_option:local"
+    },
+    {
+      "name": "gp4",
+      "pm_addr": "192.0.4.140",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:compute-0,profile:compute,boot_option:local"
+    },
+    {
+      "name": "gp5",
+      "pm_addr": "192.0.4.141",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:compute-1,profile:compute,boot_option:local"
+    },
+    {
+      "name": "gp6",
+      "pm_addr": "192.0.4.142",
+      "pm_password": "PASSW0RD",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "USERID",
+      "capabilities": "node:compute-2,profile:compute,boot_option:local"
+    }
+  ]
+}
