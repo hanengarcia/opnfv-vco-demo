@@ -1,0 +1,74 @@
+# This template configures each role to use Vlans on a single nic for
+# each isolated network. Avoids usage of network-isolation.yaml.
+#
+resource_registry:
+  OS::TripleO::Compute::Net::SoftwareConfig: /home/stack/templates/nic-configs/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: /home/stack/templates/nic-configs/controller.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: /home/stack/templates/nic-configs/ceph-storage.yaml
+  
+  OS::TripleO::Network::External: /usr/share/openstack-tripleo-heat-templates/network/external.yaml
+  OS::TripleO::Network::InternalApi: /usr/share/openstack-tripleo-heat-templates/network/internal_api.yaml
+  OS::TripleO::Network::StorageMgmt: /usr/share/openstack-tripleo-heat-templates/network/storage_mgmt.yaml
+  OS::TripleO::Network::Storage: /usr/share/openstack-tripleo-heat-templates/network/storage.yaml
+  OS::TripleO::Network::Tenant: /usr/share/openstack-tripleo-heat-templates/network/tenant.yaml
+
+# Port assignments for the VIPs
+  OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Network::Ports::InternalApiVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/vip.yaml
+
+# Port assignments for service virtual IPs for the controller role
+  OS::TripleO::Controller::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/vip.yaml
+# Port assignments for the controller role
+  OS::TripleO::Controller::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Controller::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Controller::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Controller::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::Controller::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+# Port assignments for the Compute role
+  OS::TripleO::Compute::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Compute::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Compute::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Compute::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+ # Port assignments for the ceph storage role
+  OS::TripleO::CephStorage::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::CephStorage::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::CephStorage::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::CephStorage::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::CephStorage::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+
+parameter_defaults:
+  InternalApiNetCidr: 192.168.120.0/24
+  TenantNetCidr: 192.168.150.0/24
+  StorageNetCidr: 192.168.130.0/24
+  StorageMgmtNetCidr: 192.168.140.0/24
+  #ManagementNetCidr: 172.20.0.0/24
+  ExternalNetCidr: 172.21.158.0/24
+  InternalApiAllocationPools: [{'start': '192.168.120.10', 'end': '192.168.120.120'}]
+  TenantAllocationPools: [{'start': '192.168.150.10', 'end': '192.168.150.120'}]
+  StorageAllocationPools: [{'start': '192.168.130.10', 'end': '192.168.130.120'}]
+  StorageMgmtAllocationPools: [{'start': '192.168.140.10', 'end': '192.168.140.120'}]
+  #ManagementAllocationPools: [{'start': '172.20.0.10', 'end': '172.20.0.200'}]
+  # Leave room for floating IPs in the External allocation pool
+  ExternalAllocationPools: [{'start': '172.21.158.10', 'end': '172.21.158.49'}]
+  # Set to the router gateway on the external network
+  ExternalInterfaceDefaultRoute: 172.21.158.1
+  # Gateway router for the provisioning network (or Undercloud IP)
+  ControlPlaneDefaultRoute: 192.0.4.123
+  # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
+  EC2MetadataIp: 192.0.4.123
+  # Define the DNS servers (maximum 2) for the overcloud nodes
+  DnsServers: ["8.8.8.8","4.2.2.2"]
+  InternalApiNetworkVlanID: 120
+  StorageNetworkVlanID: 130
+  StorageMgmtNetworkVlanID: 140
+  TenantNetworkVlanID: 150
+  #ManagementNetworkVlanID: 205
+  ExternalNetworkVlanID: 158
+   # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
+  NeutronExternalNetworkBridge: "''"
