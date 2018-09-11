@@ -1,0 +1,59 @@
+---
+# Build and deploy OAM project
+#
+#
+
+- name: Project
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - debug: var=ansible_python_interpreter  
+  
+    - set_fact: project_name="oam"
+      when: project_name is not defined
+  
+    - name: Create the project
+      os_project:
+        state: present
+        name: "{{ project_name }}"
+        enabled: True
+      register: os_project
+      
+    - debug: var=os_project
+
+#    - name: set project quotas
+#      command: openstack quota set --ram 1024000 --instances 100 --key-pairs 10 --floating-ips 20 --cores 200 "{{ os_project }}"
+
+    - name: Add SSH rule to default security group
+      os_security_group_rule:
+        security_group: "default"
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Add ICMP rule to default security group
+      os_security_group_rule:
+        security_group: "default"
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+  
+    - name: "Create 'oam.small' flavor with 1 vCPU, 2GB vRAM and 20GB vHDD"
+      os_nova_flavor:
+        state: present
+        name: quortus.small
+        vcpus: 1
+        ram: 2048
+        disk: 20
+  
+    - name: "Create 'oam.medium' flavor with 2 vCPU, 4GB vRAM and 20GB vHDD"
+      os_nova_flavor:
+        state: present
+        name: quortus.medium
+        vcpus: 2
+        ram: 4096
+        disk: 20
+        
+
+

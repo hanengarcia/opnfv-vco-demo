@@ -1,0 +1,18 @@
+---
+# Build and Deploy virtual EPC
+#
+#
+#
+
+- name: Evolved Packet Core
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - import_playbook: epc_layer/project.yml
+    - import_playbook: epc_layer/networks.yml
+#    - import_playbook: epc_layer/licence_server.yml
+#    - import_playbook: epc_layer/hss.yml
+#    - import_playbook: epc_layer/mme.yml
+#    - import_playbook: epc_layer/sgw.yml
+#    - import_playbook: epc_layer/pgw-internet.yml
+#    - import_playbook: epc_layer/pgw-corporate.yml

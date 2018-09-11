@@ -1,0 +1,250 @@
+---
+# Build and Deploy EPC networks
+#
+#
+#
+
+- name: Networks
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - debug: var=ansible_python_interpreter
+      
+    - set_fact: default_epc_ctrl_network="epc-ctrl"
+      when: default_epc_ctrl_network is not defined
+
+    - set_fact: default_epc_data_network="epc-data"
+      when: default_epc_data_network is not defined
+      
+    - set_fact: default_ims_ctrl_network="ims-ctrl"
+      when: default_ims_ctrl_network is not defined
+      
+    - set_fact: default_ims_data_network="ims-data"
+      when: default_ims_data_network is not defined
+      
+    - set_fact: default_gilan_network="gilan"
+      when: default_gilan_network is not defined
+      
+    - set_fact: default_internet_network="internet"
+      when: default_internet_network is not defined
+      
+    - set_fact: default_coporate_network="corporate"
+      when: default_coporate_network is not defined
+
+    - name: Create EPC control plane network
+      os_network:
+        state: present
+        name: "{{ default_epc_ctrl_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 203
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create EPC control plane network subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: epc_ctrl_subnet
+        ip_version: 4
+        cidr: 192.168.203.0/24 
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 192.168.203.5
+        allocation_pool_end: 192.168.203.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create EPC data plane network
+      os_network:
+        state: present
+        name: "{{ default_epc_data_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 204
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create IMS data plane network subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: epc_data_subnet
+        ip_version: 4
+        cidr: 192.168.204.0/24 
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 192.168.204.5
+        allocation_pool_end: 192.168.204.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create IMS control plane network
+      os_network:
+        state: present
+        name: "{{ default_ims_ctrl_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 205
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create IMS control plane network subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: ims_ctrl_subnet
+        ip_version: 4
+        cidr: 192.168.205.0/24 
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 192.168.205.5
+        allocation_pool_end: 192.168.205.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create IMS data plane network
+      os_network:
+        state: present
+        name: "{{ default_ims_data_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 206
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create IMS data plane network subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: ims_data_subnet
+        ip_version: 4
+        cidr: 192.168.206.0/24 
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 192.168.206.5
+        allocation_pool_end: 192.168.206.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create GiLAN network
+      os_network:
+        state: present
+        name: "{{ default_gilan_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 207
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create GiLAN subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: gilan_subnet
+        ip_version: 4
+        cidr: 192.168.207.0/24 
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 192.168.207.5
+        allocation_pool_end: 192.168.207.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create internet network
+      os_network:
+        state: present
+        name: "{{ default_internet_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 26
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create internet subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: internet_subnet
+        ip_version: 4
+        cidr: 172.21.26.0/24 
+        gateway_ip: 172.21.26.1
+        enable_dhcp: True
+        allocation_pool_start: 172.21.26.5
+        allocation_pool_end: 172.21.26.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet
+
+    - name: Create corporate network
+      os_network:
+        state: present
+        name: "{{ default_corporate_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 27
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create corporate subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: corporate_subnet
+        ip_version: 4
+        cidr: 172.255.2.0/24
+        no_gateway_ip: True
+        enable_dhcp: True
+        allocation_pool_start: 172.255.2.5
+        allocation_pool_end: 172.255.2.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet

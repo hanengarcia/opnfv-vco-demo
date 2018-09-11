@@ -1,0 +1,87 @@
+---
+# Build and Deploy virtual licence server (LS)
+#
+#
+#
+
+- name: Licence Server  (LS)
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - debug: var=ansible_python_interpreter
+
+    - set_fact: default_oam_network="oam"
+      when: default_oam_network is not defined
+      
+    - set_fact: default_internet_network="internet"
+      when: default_internet_network is not defined
+
+
+############# GET NETWORKS
+
+    - name: Get OAM network facts
+      os_networks_facts:
+        name:  {{ default_oam_network }}
+
+    - debug: var=openstack_networks
+
+    - set_fact: oam_network="{{ openstack_networks[0] }}"
+
+    - debug: var=oam_network
+
+
+    - name: Get Internet network facts
+      os_networks_facts:
+        name:  {{ default_internet_network }}
+
+    - debug: var=openstack_networks
+
+    - set_fact: epc_ctrl_network="{{ openstack_networks[0] }}"
+
+    - debug: var=internet_network
+
+############# CREATE PORTS
+
+    - name: Create port for OAM network
+      os_port:
+        state: present
+        name: ls_oam_port
+        network: "{{ oam_network.id }}"
+        fixed_ips:
+            - ip_address: 192.168.208.17
+        no_security_groups: True
+      register: ls_oam_port
+
+    - debug: var=ls_oam_port
+
+    - name: Create port for internet network
+      os_port:
+        state: present
+        name: ls_internet_port
+        network: "{{ epc_ctrl_network.id }}"
+        fixed_ips:
+            - ip_address: 172.21.26.14
+        no_security_groups: True
+      register: ls_internet_port
+
+    - debug: var=ls_internet_port
+
+ 
+############# CREATE MME INSTANCE
+
+    - name: Create RT server instance
+      os_server:
+        state: present
+        name: quortus_ls
+        volumme: quortus-licence-osp10backup.raw
+        flavor: quortus.medium
+        wait: false
+        nics:
+            - port-id: "{{ ls_oam_port.id }}"
+            - port-id: "{{ ls_internet_port.id }}"
+        meta:
+            hostname: quortus_ls
+      register: server
+
+    - debug: var=server

@@ -1,0 +1,46 @@
+---
+# Build and Deploy OAM network
+#
+#
+#
+
+- name: Networks
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - debug: var=ansible_python_interpreter
+
+    - set_fact: default_oam_network="oam"
+      when: default_oam_network is not defined
+
+    - name: Create OAM network
+      os_network:
+        state: present
+        name: "{{ default_oam_network }}"
+        external: False
+        shared: True
+        provider_network_type: vlan
+        provider_physical_network: datacentre
+        provider_segmentation_id: 208
+        wait: no
+      register: network
+
+    - debug: var=network
+
+    - name: Create OAM subnet
+      os_subnet:
+        state: present
+        network_name: "{{ network.id }}"
+        name: oam_subnet
+        ip_version: 4
+        cidr: 192.168.208.0/24 
+        gateway_ip: 192.168.208.1
+        enable_dhcp: True
+        allocation_pool_start: 192.168.208.5
+        allocation_pool_end: 192.168.208.240
+        dns_nameservers:
+            - 192.168.0.254
+      register: subnet
+
+    - debug: var=subnet

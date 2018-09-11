@@ -1,0 +1,14 @@
+---
+# Setup the OAM network and configuration manager
+#
+#
+#
+
+- name: VCO OAM Setup
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - import_playbook: oam_layer/project.yml
+    - import_playbook: oam_layer/networks.yml
+#    - import_playbook: oam_layer/tower.yml
+#    - import_playbook: oam_layer/worker.yml

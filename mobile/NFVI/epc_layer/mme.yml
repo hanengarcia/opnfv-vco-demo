@@ -1,0 +1,129 @@
+---
+# Build and Deploy virtual Mobility Management Entity (MME)
+#
+#
+#
+
+- name: Mobility Management Entity (MME)
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - debug: var=ansible_python_interpreter
+
+    - set_fact: default_oam_network="oam"
+      when: default_oam_network is not defined
+      
+    - set_fact: default_epc_ctrl_network="epc-ctrl"
+      when: default_epc_ctrl_network is not defined
+      
+    - set_fact: default_ims_ctrl_network="ims-ctrl"
+      when: default_ims_ctrl_network is not defined
+
+############# GET NETWORKS
+
+    - name: Get OAM network facts
+      os_networks_facts:
+        name:  {{ default_oam_network }}
+
+    - debug: var=openstack_networks
+
+    - set_fact: oam_network="{{ openstack_networks[0] }}"
+
+    - debug: var=oam_network
+
+
+    - name: Get EPC control plane network facts
+      os_networks_facts:
+        name:  {{ default_epc_ctrl_network }}
+
+    - debug: var=openstack_networks
+
+    - set_fact: epc_ctrl_network="{{ openstack_networks[0] }}"
+
+    - debug: var=epc_ctrl_network
+    
+    
+    - name: Get IMS control plane network facts
+      os_networks_facts:
+        name:  {{ default_ims_ctrl_network }}
+
+    - debug: var=openstack_networks
+
+    - set_fact: ims_ctrl_network="{{ openstack_networks[0] }}"
+
+    - debug: var=ims_ctrl_network
+
+############# CREATE PORTS
+
+    - name: Create port for OAM network
+      os_port:
+        state: present
+        name: mme_oam_port
+        network: "{{ oam_network.id }}"
+        fixed_ips:
+            - ip_address: 192.168.208.10
+        no_security_groups: True
+      register: mme_oam_port
+
+    - debug: var=mme_oam_port
+
+    - name: Create port for EPC control plane network
+      os_port:
+        state: present
+        name: mme_epc_ctrl_port
+        network: "{{ epc_ctrl_network.id }}"
+        fixed_ips:
+            - ip_address: 192.168.203.14
+        no_security_groups: True
+      register: mme_epc_ctrl_port
+
+    - debug: var=mme_epc_ctrl_port
+
+    - name: Create port for IMS control plane network
+      os_port:
+        state: present
+        name: mme_ims_ctrl_port
+        network: "{{ ims_ctrl_network.id }}"
+        fixed_ips:
+            - ip_address: 192.168.205.12
+        no_security_groups: True
+      register: mme_ims_ctrl_port
+
+    - debug: var=mme_ims_ctrl_port
+
+ 
+############# CREATE MME INSTANCE
+
+    - name: Create RT server instance
+      os_server:
+        state: present
+        name: quortus_mme
+        volumme: quortus-mme-osp10backup.raw
+        flavor: quortus.medium
+        wait: false
+        nics:
+            - port-id: "{{ mme_oam_port.id }}"
+            - port-id: "{{ mme_epc_ctrl_port.id }}"
+            - port-id: "{{ mme_ims_ctrl_port.id }}"
+        meta:
+            hostname: quortus_mme
+      register: server
+
+    - debug: var=server
+
+    - name: Adding floating IP address
+      os_floating_ip:
+           state: present
+           server: "{{ server.id }}"
+           network: floating            
+           nat_destination: "{{ oam_network.id }}"
+           fixed_address: 172.21.25.172
+           wait: true
+           timeout: 180
+#
+#    - name: Disable port security
+#      shell: neutron port-update --port-security-enabled=False "{{ isp_subnet_gw.id }}"
+#
+#    - name: Disable port security for FW networt
+#      shell: neutron port-update --port-security-enabled=False "{{ fw__port_router.id }}"
