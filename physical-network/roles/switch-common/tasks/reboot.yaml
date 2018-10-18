@@ -1,0 +1,10 @@
+#
+# Reboot a system
+#
+- name: restart the machine and wait for it to come back
+  shell: nohup bash -c 'sleep 2 && shutdown -r now "Ansible kernel update applied"' &
+  become: true
+  async: 1
+  poll: 0
+  ignore_errors: true
+- local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=900

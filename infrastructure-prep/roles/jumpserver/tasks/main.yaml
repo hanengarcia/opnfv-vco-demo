@@ -1,0 +1,148 @@
+---
+- name: Set our hostname correctly
+  hostname:
+    name: opnfv
+  become: yes
+
+- name: Add infrastruture admins
+  user:
+    name: "{{ item }}"
+    groups: sudo
+    shell: /bin/bash
+    state: present
+  become: yes
+  with_items:
+  - jrrivers
+  - dcain
+  - hgarciag
+- authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', '{{ inventory_dir }}/keys/{{ item }}') }}"
+  become: yes
+  with_items:
+  - jrrivers
+  - dcain
+  - hgarciag
+
+- name: nopasswd for people in the sudo group
+  copy:
+    src: "{{ inventory_dir }}/files/sudo-nopasswd"
+    dest: "/etc/sudoers.d/"
+  become: yes
+  
+- name: disable passwords for SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item }}"
+    line: "{{ item }} no"
+  become: yes
+  with_items:
+  - ChallengeResponseAuthentication
+  - PasswordAuthentication
+  - UsePAM
+  - PermitRootLogin
+- service:
+    name: ssh
+    state: restarted
+  become: yes   
+
+- name: install relevant packages
+  apt:
+    name: "{{ item }}"
+  with_items:
+  - ipmitool
+  - snmp
+  become: yes
+
+- name: cluster hosts file
+  copy:
+    src: "{{ inventory_dir }}/files/hosts"
+    dest: "/etc/hosts"
+  become: yes
+
+- name: DNS (named/bind9) setup
+  copy:
+    src: "{{ inventory_dir }}/files/db.lab.local"
+    dest: "/etc/bind/zones"
+  become: yes
+  register: _dns
+- service:
+    name: bind9
+    state: restarted
+  become: yes
+  when: _dns is changed
+
+- name: DHCP for all cluster addressing
+  copy:
+    src: "{{ inventory_dir}}/files/dhcpd.hosts"
+    dest: "/etc/dhcp"
+  become: yes
+  register: _hosts
+- copy:
+    src: "{{ inventory_dir }}/files/dhcpd.pools"
+    dest: "/etc/dhcp"
+  become: yes
+  register: _pools
+- service:
+    name: isc-dhcp-server
+    enabled: yes
+    state: restarted
+  become: yes
+  when: _hosts is changed or _pools is changed
+
+- name: install useful tools in /usr/sbin
+  copy:
+    src: "{{ inventory_dir }}/files/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    group: sudo
+    mode: "u+rwx,g=rx,o=r"
+  become: yes
+  with_items:
+  - opnfv-ipmi
+  - opnfv-pdu
+  - opnfv-console
+
+- name: Set up forwarding to the PDU nodes for the opnfv-pdu tool (all else is blocked)
+  shell: "ip route replace 172.16.0.23/32 via 172.16.13.1"
+  become: yes
+- shell: "ip route replace 172.16.0.21/32 via 172.16.13.1"
+  become: yes
+
+
+# sudo iptables -t nat -A POSTROUTING -o eth2 -d 172.16.13.2 -j MASQUERADE
+- name: Set up NAT to allow access to the console servers
+  blockinfile:
+    dest: /etc/rc.local
+    insertbefore: "exit 0"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK console server"
+    block: |
+      /sbin/iptables -t nat -A POSTROUTING -o eth2 -d 172.16.13.2 -j MASQUERADE
+  become: true
+  register: _console_dnat
+- iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth2
+    destination: "172.16.13.2"
+    jump: MASQUERADE
+  become: yes
+  when: _console_dnat is changed
+# sudo iptables -t nat -A POSTROUTING -o eth2 -d 172.16.11.2 -j MASQUERADE
+- blockinfile:
+    dest: /etc/rc.local
+    insertbefore: "exit 0"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK console1 server"
+    block: |
+      /sbin/iptables -t nat -A POSTROUTING -o eth2 -d 172.16.11.2 -j MASQUERADE
+  become: true
+  register: _console1_dnat
+- iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth2
+    destination: "172.16.11.2"
+    jump: MASQUERADE
+  become: yes
+  when: _console1_dnat is changed
+...

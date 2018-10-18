@@ -1,0 +1,102 @@
+#-------------------------------------------------------------------------------
+#
+# Deploy a leaf device in a Unnumbered BGP fabric and advertise all networks
+# via EVPN
+#
+#-------------------------------------------------------------------------------
+---
+- set_fact:
+    myvars: "{{ switchvars[inventory_hostname] }}"
+
+# L3 fabric 
+#
+- name: Clean the slate and set up unnumbered BGP fabric and VNI advertisement
+  nclu:
+    commands:
+    - del all
+    - add bgp autonomous-system {{ myvars.ASN }}
+    - add bgp router-id {{ myvars.LOOPBACK_V4 }}
+    - add loopback lo ip address {{ myvars.LOOPBACK_V4 }}/32
+    - add bgp ipv4 unicast network {{ myvars.LOOPBACK_V4 }}/32
+    - add loopback lo ipv6 address {{ myvars.LOOPBACK_V6 }}/128
+    - add bgp ipv6 unicast network {{ myvars.LOOPBACK_V6 }}/128
+    - add interface {{ UPLINKS }} mtu 9216
+    - del interface {{ UPLINKS }} ipv6 nd suppress-ra
+    - add bgp neighbor {{ UPLINKS }} interface remote-as external 
+    - add bgp ipv4 unicast neighbor {{ UPLINKS }} activate 
+    - add bgp ipv6 unicast neighbor {{ UPLINKS }} activate 
+    - add bgp l2vpn evpn neighbor {{ UPLINKS }} activate
+    - add bgp l2vpn evpn advertise-all-vni
+    atomic: true
+    description: l3-fabric
+
+# VLANS/VNIS
+#
+- name: VLANs and VTEPs
+  nclu:
+    abort: yes
+- nclu:
+    commands:
+    - add vxlan vtep{{ item }} vxlan id {{ item }}
+    - add vxlan vtep{{ item }} vxlan local-tunnelip {{ myvars.LOOPBACK_V4 }}
+    - add vxlan vtep{{ item }} bridge access {{ item }}
+    - add vxlan vtep{{ item }} bridge learning off
+    - add vxlan vtep{{ item }} mtu 9216
+  with_items:
+  - "{{ OSP_VLANS }}"
+  - "{{ SDR_RRU_VLAN }}"
+  - "{{ RRU_DU_VLAN }}"
+- nclu:
+    commit: yes
+    description: vteps
+
+
+
+# Server facing interfaces
+#
+- name: Access ports
+  nclu:
+    commands:
+    - add interface swp1,swp3,swp5 breakout 4x
+    - add interface swp2,swp4,swp6 breakout disable
+    atomic: true
+    description: lock in the breakouts
+- nclu:
+    commands:
+    - add interface {{ item.value }} link speed 10000
+    - add interface {{ item.value }} bridge trunk vlans {{ OSP_VLANS | join(",") }}
+    - add interface {{ item.value }} bridge pvid {{ item.key }}
+    - add interface {{ item.value }} mtu 9216
+    atomic: true
+    description: access ports with provisioning on vlan {{ item.key }}
+  with_dict: "{{ myvars.PROVISION_VLANS }}"
+
+
+# Software Defined Radio and OAI RRU/DU untagged service chaining
+#
+- name: Radio facing interfaces
+  nclu:
+    commands:
+    - add interface swp5s0 link down
+    - add interface {{ SDR_IF }} link speed 10000
+    - add interface {{ SDR_IF }} bridge access {{ SDR_RRU_VLAN }}
+    - add interface {{ SDR_IF }} mtu 9216
+    atomic: true
+    description: set link to SDR
+    when: inventory_hostname == "leaf-1-1"
+
+- name: RRU/DU untagged interfaces
+  nclu:
+    commands:
+    - add interface {{ RRU_IF }} bridge access {{ SDR_RRU_VLAN }}
+    - add interface {{ DU_IF }}  bridge access {{ RRU_DU_VLAN }}
+    atomic: true
+    description: untagged interfaces to the RU and DU
+    when: inventory_hostname == "leaf-1-1"
+- nclu:
+    commands:
+    - add interface {{ RRU_IF }} bridge access {{ RRU_DU_VLAN }}
+    atomic: true
+    description: untagged interfaces to the RU and DU
+    when: inventory_hostname == "leaf-1-2"
+...

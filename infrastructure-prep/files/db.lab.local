@@ -1,0 +1,59 @@
+; BIND data file for lab.local zone.
+;
+;
+$ORIGIN lab.local.
+$TTL  604800
+@ IN  SOA localhost. root.localhost. (
+    1427819976    ; Serial
+    604800    ; Refresh
+    86400   ; Retry
+    2419200   ; Expire
+    604800  ) ; Negative Cache TTL
+;
+@   IN  NS  .
+;
+jumpserver IN A 192.168.0.254 
+opnfv-demo IN A 192.168.0.253 
+console    IN A 172.16.13.2   
+console1   IN A 172.16.11.2   
+pdu2l      IN A 172.16.0.23   
+pdu1l      IN A 172.16.0.21   
+
+spine-1-1  IN A 192.168.0.11  
+spine-1-2  IN A 192.168.0.12  
+leaf-1-1   IN A 192.168.0.13  
+leaf-1-2   IN A 192.168.0.14  
+leaf-2-1   IN A 192.168.0.15  
+leaf-2-2   IN A 192.168.0.16  
+leaf-s-1   IN A 192.168.0.17  
+leaf-s-2   IN A 192.168.0.18  
+			      
+server-1-1 IN A 192.168.0.31  
+server-1-2 IN A 192.168.0.32  
+server-1-3 IN A 192.168.0.33  
+server-1-4 IN A 192.168.0.34  
+server-1-5 IN A 192.168.0.35  
+server-1-6 IN A 192.168.0.36  
+server-1-7 IN A 192.168.0.37  
+server-1-8 IN A 192.168.0.38 
+server-2-1 IN A 192.168.0.41  
+server-2-2 IN A 192.168.0.42  
+server-2-3 IN A 192.168.0.43  
+server-2-4 IN A 192.168.0.44  
+server-s-1 IN A 192.168.0.51  
+server-s-2 IN A 192.168.0.52  
+			      
+ipmi-1-1   IN A 192.168.0.131 
+ipmi-1-2   IN A 192.168.0.132 
+ipmi-1-3   IN A 192.168.0.133 
+ipmi-1-4   IN A 192.168.0.134 
+ipmi-1-5   IN A 192.168.0.135 
+ipmi-1-6   IN A 192.168.0.136 
+ipmi-1-7   IN A 192.168.0.137 
+ipmi-1-8   IN A 192.168.0.138 
+ipmi-2-1   IN A 192.168.0.141 
+ipmi-2-2   IN A 192.168.0.142 
+ipmi-2-3   IN A 192.168.0.143 
+ipmi-2-4   IN A 192.168.0.144 
+ipmi-s-1   IN A 192.168.0.151 
+ipmi-s-2   IN A 192.168.0.152 

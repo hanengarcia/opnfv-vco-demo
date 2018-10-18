@@ -1,0 +1,42 @@
+---
+- name: Figure out which switch image to install
+  set_fact:
+    _vers_arch: "{{ cumulus_linux_version }}-mlx-amd64"
+  when:
+  - '"amd64" in ansible_cmdline.BOOT_IMAGE'
+  - '"mlnx" in ansible_cmdline.cl_platform'
+- set_fact:
+    _vers_arch: "{{ cumulus_linux_version }}-bcm-amd64"
+  when:
+  - '"amd64" in ansible_cmdline.BOOT_IMAGE'
+  - '"bcm" in ansible_cmdline.cl_platform'
+- set_fact:
+    _vers_arch: "{{ cumulus_linux_version }}-bcm-armel"
+  when:
+  - '"armel" in ansible_cmdline.BOOT_IMAGE'
+  - '"bcm" in ansible_cmdline.cl_platform'
+
+- name: Set up the switch to re-install the desired switch image
+  copy:
+    src: "{{ inventory_dir }}/files/cumulus-linux-{{ _vers_arch }}.bin"
+    dest: "/tmp/cumulus-linux-{{ _vers_arch }}.bin"
+    mode: "u+rwx,g=r,o=r"
+- copy:
+    src: "{{ inventory_dir }}/files/cumulus-ztp"
+    dest: "/tmp/cumulus-ztp"
+    mode: "u+rwx,g=r,o=r"
+- command: onie-install -fa -i /tmp/cumulus-linux-{{ _vers_arch }}.bin -z /tmp/cumulus-ztp
+  become: true
+
+- name: Reboot the switch to image and license it (wait for it to come back)
+  shell: nohup bash -c 'sleep 2 && shutdown -r now "Ansible reimaging"' &
+  become: true
+  async: 1
+  poll: 0
+  ignore_errors: true
+- pause:
+    minutes: 12
+- local_action: command ssh-keygen -R {{ inventory_hostname }}
+- local_action: command ssh-keygen -R {{ ansible_default_ipv4.address }}
+- local_action: wait_for host={{ inventory_hostname }} port=22 state=started
+...

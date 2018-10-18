@@ -1,0 +1,105 @@
+#
+# Global connectivity options
+#
+
+cumulus_linux_version: "3.5.0"
+
+# Leaf switch port definitions
+#
+UPLINKS:     'swp15,swp16'
+
+# Spine switch port definitions
+#
+AGG_PORTS:   'swp1,swp2,swp3,swp4,swp5,swp6'
+
+#
+# VLAN/VNI parameters
+#
+
+OSP_VLANS:
+    - 25
+    - 26
+    - 66
+    - 67
+    - 120
+    - 130
+    - 140
+    - 150
+    - 201
+    - 202
+    - 203
+    - 204
+    - 205
+    - 206
+    - 207
+    - 208
+
+#
+# Software Defined Radio Connectivity and Service Chaining
+#
+
+SDR_IF: swp5s1
+RRU_IF: swp3s2
+SDR_RRU_VLAN: 40
+DU_IF: swp3s3
+RRU_DU_VLAN: 41
+
+INET_GATEWAY: '172.21.25.1'
+
+#
+# Inventory specific variables
+#
+
+switchvars:
+
+  spine-1-1:
+    LOOPBACK_V4: 10.0.0.21
+    LOOPBACK_V6: fd00:0:0:1::21
+    ASN: 65001
+
+  spine-1-2:
+    LOOPBACK_V4: 10.0.0.22
+    LOOPBACK_V6: fd00:0:0:1::22
+    ASN: 65002
+
+  leaf-1-1:
+    LOOPBACK_V4: 10.0.0.11
+    LOOPBACK_V6: fd00:0:0:1::11
+    ASN: 65101
+    PROVISION_VLANS:
+      66: 'swp1s0-3,swp3s0-3'
+
+  leaf-1-2:
+    LOOPBACK_V4: 10.0.0.12
+    LOOPBACK_V6: fd00:0:0:1::12
+    ASN: 65102
+    PROVISION_VLANS:
+      66: 'swp1s0-3,swp3s0-3'
+
+  leaf-2-1:
+    LOOPBACK_V4: 10.0.0.13
+    LOOPBACK_V6: fd00:0:0:1::13
+    ASN: 65103
+    PROVISION_VLANS:
+      66: swp1s0-3
+
+  leaf-2-2:
+    LOOPBACK_V4: 10.0.0.14
+    LOOPBACK_V6: fd00:0:0:1::14
+    ASN: 65104
+    PROVISION_VLANS:
+      66: swp1s0-3
+
+  leaf-s-1:
+    LOOPBACK_V4: 10.0.0.15
+    LOOPBACK_V6: fd00:0:0:1::15
+    ASN: 65105
+    PROVISION_VLANS:
+      66: swp1s0-3
+
+  leaf-s-2:
+    LOOPBACK_V4: 10.0.0.16
+    LOOPBACK_V6: fd00:0:0:1::16
+    ASN: 65106
+    PROVISION_VLANS:
+      66: swp1s0-3

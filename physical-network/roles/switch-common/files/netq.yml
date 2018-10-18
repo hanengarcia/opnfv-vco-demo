@@ -1,0 +1,22 @@
+# See /usr/share/doc/netq/examples for full configuration file
+backend:
+  port: 6379
+  server: 192.168.0.254
+  vrf: default
+user-commands:
+- commands:
+  - command: /bin/cat /etc/network/interfaces
+    key: config-interfaces
+    period: '60'
+  - command: /bin/cat /etc/ntp.conf
+    key: config-ntp
+    period: '60'
+  service: misc
+- commands:
+  - command:
+    - /usr/bin/vtysh
+    - -c
+    - show running-config
+    key: config-quagga
+    period: '60'
+  service: zebra

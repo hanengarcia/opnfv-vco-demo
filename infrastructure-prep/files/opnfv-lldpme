@@ -1,0 +1,16 @@
+#! /bin/bash
+
+if ls /sys/class/net/$1 &> /dev/null; then
+    echo "enabling lldp for interface: $1"
+    lldptool set-lldp -i $1 adminStatus=rxtx
+    lldptool -T -i $1 -V  sysName enableTx=yes
+    lldptool -T -i $1 -V  portDesc enableTx=yes
+    lldptool -T -i $1 -V  sysDesc enableTx=yes
+    lldptool -T -i $1 -V sysCap enableTx=yes
+    lldptool -T -i $1 -V mngAddr enableTx=yes
+else
+    echo "ERROR: could not find $1 in /sys/class/net/, are you sure it is an interface?"
+    exit 1
+fi
+
+exit 0

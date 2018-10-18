@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Copyright 2017 Cumulus Networks, Inc.
+# All rights reserved.
+#
+# CUMULUS-AUTOPROVISIONING
+#
+
+set -e
+echo "Running ZTP..."
+
+# install a license
+#
+echo 'jan8th_2018nfrtracker@linuxfoundation.org|oDhpMCACDjAYRDth1nQpRSyIBy7vAg4YssbIa5I80tVOWwn+Cw
+' | /usr/cumulus/bin/cl-license -i
+
+# Restart switchd
+#
+echo "Restarting switchd after installing license"
+CL_VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release | sed -e "s/^.*=//" -e "s/\..*$//")
+case $CL_VERSION in
+    2) service switchd restart;;
+    3) systemctl restart switchd.service;;
+    *) echo "Error: unknown Cumulus Linux version in /etc/lsb-release"; exit 1;;
+esac
+
+# get out of here
+#
+exit 0
+

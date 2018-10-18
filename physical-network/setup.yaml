@@ -1,0 +1,23 @@
+---
+- hosts: switches
+  vars:
+    ansible_user: cumulus
+    ansible_ssh_pass: CumulusLinux!
+    ansible_become_pass: CumulusLinux!
+  roles:
+  - switch-common
+
+- hosts: spines
+  roles:
+  - l3-evpn-spine
+
+- hosts: leafs
+  roles:
+  - l3-evpn-leaf
+
+- hosts: leaf-1-1
+  roles:
+  - l3-evpn-leaf-radio
+...
+
+ 

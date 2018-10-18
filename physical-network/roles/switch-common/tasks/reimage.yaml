@@ -1,0 +1,13 @@
+---
+- hosts: switches
+  become: yes
+
+  tasks:
+  - name: Initiate ONIE install
+    shell: "onie-select -if"
+  - shell: nohup bash -c 'sleep 2 && shutdown -r now "Ansible kernel update applied"' &
+    become: true
+    async: 1
+    poll: 0
+    ignore_errors: true
+...

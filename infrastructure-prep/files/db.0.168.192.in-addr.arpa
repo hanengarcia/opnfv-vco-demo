@@ -1,0 +1,57 @@
+;
+; BIND data file for 0.168.192.in-addr.arpa zone.
+;
+;
+$ORIGIN 0.168.192.in-addr.arpa.
+$TTL  604800
+@ IN  SOA localhost. root.localhost. (
+    1427819976    ; Serial
+    604800    ; Refresh
+    86400   ; Retry
+    2419200   ; Expire
+    604800  ) ; Negative Cache TTL
+;
+@   IN  NS  .
+;
+254 IN PTR jumpserver.lab.local.
+253 IN PTR opnfv-demo.lab.local.
+2   IN PTR console.lab.local.
+2   IN PTR console1.lab.local.
+3   IN PTR pdu2l.lab.local.
+1   IN PTR pdu1l.lab.local.
+11  IN PTR spine-1-1.lab.local.
+12  IN PTR spine-1-2.lab.local.
+13  IN PTR leaf-1-1.lab.local.
+14  IN PTR leaf-1-2.lab.local.
+15  IN PTR leaf-2-1.lab.local.
+16  IN PTR leaf-2-2.lab.local.
+17  IN PTR leaf-s-1.lab.local.
+18  IN PTR leaf-s-2.lab.local.
+31  IN PTR server-1-1.lab.local.
+32  IN PTR server-1-2.lab.local.
+33  IN PTR server-1-3.lab.local.
+34  IN PTR server-1-4.lab.local.
+35  IN PTR server-1-5.lab.local.
+36  IN PTR server-1-6.lab.local.
+37  IN PTR server-1-7.lab.local.
+38  IN PTR server-1-8.lab.local.
+41  IN PTR server-2-1.lab.local.
+42  IN PTR server-2-2.lab.local.
+43  IN PTR server-2-3.lab.local.
+44  IN PTR server-2-4.lab.local.
+51  IN PTR server-s-1.lab.local.
+52  IN PTR server-s-2.lab.local.
+131 IN PTR ipmi-1-1.lab.local.
+132 IN PTR ipmi-1-2.lab.local.
+133 IN PTR ipmi-1-3.lab.local.
+134 IN PTR ipmi-1-4.lab.local.
+135 IN PTR ipmi-1-5.lab.local.
+136 IN PTR ipmi-1-6.lab.local.
+137 IN PTR ipmi-1-7.lab.local.
+138 IN PTR ipmi-1-8.lab.local.
+141 IN PTR ipmi-2-1.lab.local.
+142 IN PTR ipmi-2-2.lab.local.
+143 IN PTR ipmi-2-3.lab.local.
+144 IN PTR ipmi-2-4.lab.local.
+151 IN PTR ipmi-s-1.lab.local.
+152 IN PTR ipmi-s-2.lab.local.

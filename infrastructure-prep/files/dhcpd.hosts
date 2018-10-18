@@ -1,0 +1,60 @@
+# Configured by Ansible
+# static DHCP hosts
+host opnfv-demo {  hardware ethernet 0c:c4:7a:9f:ee:2b;  fixed-address opnfv-demo;  }
+host console    {  hardware ethernet 00:00:00:00:00:00;  fixed-address 172.16.13.2; }
+
+host spine-1-1  {  hardware ethernet 24:8a:07:58:fa:ac;  fixed-address spine-1-1; }
+host spine-1-2  {  hardware ethernet 24:8a:07:56:c8:0c;  fixed-address spine-1-2; }
+host leaf-1-1   {  hardware ethernet 24:8a:07:56:c6:8c;  fixed-address leaf-1-1; }
+host leaf-1-2   {  hardware ethernet 24:8a:07:56:c7:ec;  fixed-address leaf-1-2; }
+host leaf-2-1   {  hardware ethernet 24:8a:07:56:c6:84;  fixed-address leaf-2-1; }
+host leaf-2-2   {  hardware ethernet 24:8a:07:56:c7:84;  fixed-address leaf-2-2; }
+host leaf-s-1   {  hardware ethernet 24:8a:07:58:f9:fc;  fixed-address leaf-s-1; }
+host leaf-s-2   {  hardware ethernet 24:8a:07:58:f9:cc;  fixed-address leaf-s-2; }
+
+host server-1-1 {  hardware ethernet c8:0a:a9:03:12:b4;  fixed-address server-1-1; }
+host server-1-2 {  hardware ethernet 00:26:9e:b5:e7:ba;  fixed-address server-1-2; }
+host server-1-3 {  hardware ethernet e8:9a:8f:50:7d:66;  fixed-address server-1-3; }
+host server-1-4 {  hardware ethernet 00:26:9e:cd:3a:16;  fixed-address server-1-4; }
+host server-1-5 {  hardware ethernet 00:26:9e:58:82:3a;  fixed-address server-1-5; }
+host server-1-6 {  hardware ethernet 00:26:9e:3d:18:02;  fixed-address server-1-6; }
+host server-1-7 {  hardware ethernet 00:26:9e:82:1c:40;  fixed-address server-1-7; }
+host server-1-8 {  hardware ethernet 00:26:9e:82:20:2c;  fixed-address server-1-8; }
+host server-2-1 {  hardware ethernet 00:26:9e:b5:e5:d2;  fixed-address server-2-1; }
+host server-2-2 {  hardware ethernet c8:0a:a9:03:14:48;  fixed-address server-2-2; }
+host server-2-3 {  hardware ethernet 00:26:9e:b5:e8:a0;  fixed-address server-2-3; }
+host server-2-4 {  hardware ethernet e8:9a:8f:50:7a:12;  fixed-address server-2-4; }
+host server-s-1 {  hardware ethernet 00:26:9e:b5:e7:24;  fixed-address server-s-1; }
+host server-s-2 {  hardware ethernet 00:26:9e:b5:e7:a2;  fixed-address server-s-2; }
+
+host ipmi-1-1   {  hardware ethernet c8:0a:a9:03:19:e4;  fixed-address ipmi-1-1; }
+host ipmi-1-2   {  hardware ethernet 00:26:9e:b5:f9:1c;  fixed-address ipmi-1-2; }
+host ipmi-1-3   {  hardware ethernet e8:9a:8f:50:85:68;  fixed-address ipmi-1-3; }
+host ipmi-1-4   {  hardware ethernet 00:26:9e:cd:42:56;  fixed-address ipmi-1-4; }
+host ipmi-1-5   {  hardware ethernet 00:26:9e:58:89:b2;  fixed-address ipmi-1-5; }
+host ipmi-1-6   {  hardware ethernet 00:26:9e:3d:20:10;  fixed-address ipmi-1-6; }
+host ipmi-1-7   {  hardware ethernet 00:26:9e:82:24:52;  fixed-address ipmi-1-7; }
+host ipmi-1-8   {  hardware ethernet 00:26:9e:82:27:2a;  fixed-address ipmi-1-8; }
+host ipmi-2-1   {  hardware ethernet 00:26:9e:b5:f6:f4;  fixed-address ipmi-2-1; }
+host ipmi-2-2   {  hardware ethernet c8:0a:a9:03:1b:78;  fixed-address ipmi-2-2; }
+host ipmi-2-3   {  hardware ethernet 00:26:9e:b5:f9:c2;  fixed-address ipmi-2-3; }
+host ipmi-2-4   {  hardware ethernet e8:9a:8f:50:82:10;  fixed-address ipmi-2-4; }
+host ipmi-s-1   {  hardware ethernet 00:26:9e:b5:f8:44;  fixed-address ipmi-s-1; }
+host ipmi-s-2   {  hardware ethernet 00:26:9e:b5:f9:00;  fixed-address ipmi-s-2; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

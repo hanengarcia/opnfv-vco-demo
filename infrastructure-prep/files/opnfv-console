@@ -1,0 +1,65 @@
+#! /bin/bash
+
+# set to "echo" for debugging
+#
+DEBUG=""
+
+# usage
+#
+usage() {
+    echo "$*"
+    echo "usage:"
+    echo "$0 [target]"
+    echo "   where TARGET is the hostname of the target device (we find the serial port)"
+    exit 1
+}
+
+# The console associations
+#
+
+declare -A console
+console[spine-1-1]=console:7001
+console[spine-1-2]=console:7002
+console[leaf-1-1]=console:7003
+console[leaf-1-2]=console:7004
+console[leaf-2-1]=console:7005
+console[leaf-2-2]=console:7006
+console[leaf-s-1]=console:7007
+console[leaf-s-2]=console:7008
+console[server-1-1]=console:7011
+console[server-1-2]=console:7012
+console[server-1-3]=console:7016
+console[server-1-4]=console:7017
+console[server-1-5]=console1:7011
+console[server-1-6]=console1:7012
+console[server-1-7]=console1:7013
+console[server-1-8]=console1:7014
+console[server-2-1]=console:7013
+console[server-2-2]=console:7014
+console[server-2-3]=console:7018
+console[server-2-4]=console:7019
+console[server-s-1]=console:7015
+console[server-s-2]=console:7020
+
+
+# quick error checking
+#
+[ $# -eq 1 ] || usage "You did not specify enough comand line arguments"
+
+# get the target
+#
+
+SRVR=${console[$1]%%:*}
+PORT=${console[$1]#*:}
+if [ "n${PORT}" == "n" ]; then
+  usage "$1 does not seem to have a serial console port attached"
+else
+  echo "targeting serial console for ${1}"
+  shift
+fi
+
+# main
+#
+
+telnet ${SRVR} ${PORT}
+
