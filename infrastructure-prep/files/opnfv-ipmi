@@ -1,0 +1,51 @@
+#! /bin/bash
+
+# set to "echo" for debugging
+#
+DEBUG=""
+
+CMDS="bios|boot|cycle|disk|on|off|pxe|status"
+
+# usage
+#
+usage() {
+    echo "$*"
+    echo "usage:"
+    echo "$0 [target] [$CMDS] <$CMDS> ..."
+    echo "   where TARGET is the hostname of the target server (we find the IPMI port)"
+    exit 1
+}
+
+# quick error checking
+#
+sudo ls &> /dev/null || usage "You do not seem to have sudo access"
+[ $# -ge 2 ] || usage "You did not specify enough comand line arguments"
+
+# get the target
+#
+if [ ! $(grep -q -w "$1" /etc/hosts) ]; then
+  TARGET=${1/server/ipmi}
+  echo "targeting ${1}'s ipmi endpoint, $TARGET"
+  shift
+else
+  usage "$1 does not exist in /etc/hosts"
+fi
+
+# main
+#
+IPMITOOL="sudo ipmitool -I lanplus -U admin -P admin"
+
+for I in $*
+do
+  case $I in
+    bios)    ${DEBUG} ${IPMITOOL} -H $TARGET chassis bootdev bios;;
+    boot)    ${DEBUG} ${IPMITOOL} -H $TARGET chassis bootdev none options=help;;
+    cycle)   ${DEBUG} ${IPMITOOL} -H $TARGET chassis power cycle;;
+    disk)    ${DEBUG} ${IPMITOOL} -H $TARGET chassis bootdev disk options=persistent;;
+    on)      ${DEBUG} ${IPMITOOL} -H $TARGET chassis power on;;
+    off)     ${DEBUG} ${IPMITOOL} -H $TARGET chassis power off;;
+    pxe)     ${DEBUG} ${IPMITOOL} -H $TARGET chassis bootdev pxe;;
+    status)  ${DEBUG} ${IPMITOOL} -H $TARGET chassis power status;;
+    *)       usage "\"${I}\" is not one of $CMDS";;
+  esac
+done

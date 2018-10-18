@@ -1,0 +1,3 @@
+Cumulus Linux images are too large to be stored in github, so you need to
+download them into this directory if you want/need to reimage your switching
+infrastructure.

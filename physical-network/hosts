@@ -1,0 +1,20 @@
+#-------------------------------------------------------------------------------
+#
+# switches
+#
+
+[spines]
+spine-1-1
+spine-1-2
+
+[leafs]
+leaf-1-1
+leaf-1-2
+leaf-2-1
+leaf-2-2
+leaf-s-1
+leaf-s-2
+
+[switches:children]
+spines
+leafs

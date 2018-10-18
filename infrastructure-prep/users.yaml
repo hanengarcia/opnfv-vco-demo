@@ -1,0 +1,18 @@
+---
+- hosts: opnfv-demo
+
+  tasks:
+  - name: All remote users and set them up passwordless SSH
+    user:
+      name: "{{ item | basename }}"
+      shell: /bin/bash
+      state: present
+    become: yes
+    with_fileglob: "{{ inventory_dir }}/keys/*"
+  - authorized_key:
+      user: "{{ item | basename }}"
+      key: "{{ lookup('file', '{{ item }}') }}"
+      state: present
+    become: yes
+    with_fileglob: "{{ inventory_dir }}/keys/*"
+...

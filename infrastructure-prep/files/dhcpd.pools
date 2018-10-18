@@ -1,0 +1,17 @@
+# DHCP Pools
+#################################
+# localpool
+#################################
+subnet 192.168.0.0 netmask 255.255.255.0 {
+  pool
+  {
+    range 192.168.0.200 192.168.0.250;
+  }
+
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.0.254;
+#  filename = "pxelinux.0";
+#  next-server 192.168.0.254;
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url "http://192.168.0.254/ztp.sh";
+}

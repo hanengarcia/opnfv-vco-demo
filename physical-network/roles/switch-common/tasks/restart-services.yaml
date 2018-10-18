@@ -1,0 +1,12 @@
+#
+# Restart all of the interesting components
+#
+- name: restart networking, Quagga, and switchd
+  command: ifreload -a
+  become: true
+- command: systemctl restart quagga
+  become: true
+- command: systemctl restart switchd
+  become: true
+- command: systemctl restart netd
+  become: true

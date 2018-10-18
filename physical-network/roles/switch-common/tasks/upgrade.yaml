@@ -1,0 +1,13 @@
+---
+- hosts: switches
+  become: yes
+
+  tasks:
+  - name: Update the switch software and reboot
+    apt:
+      update_cache: yes
+      upgrade: yes
+      autoremove: yes
+      force: yes
+  - include_tasks: "{{ inventory_dir }}/roles/switch-common/tasks/reboot.yaml"
+...

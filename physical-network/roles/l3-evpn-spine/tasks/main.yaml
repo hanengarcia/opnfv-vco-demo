@@ -1,0 +1,30 @@
+#-------------------------------------------------------------------------------
+#
+# Deploy a spine device in a Unnumbered BGP fabric
+#
+#-------------------------------------------------------------------------------
+---
+
+- set_fact:
+    myvars: "{{ switchvars[inventory_hostname] }}"
+
+
+- name: Clean the slate and set up unnumbered BGP fabric and VNI advertisement
+  nclu:
+    commands:
+    - del all
+    - add bgp autonomous-system {{ myvars.ASN }}
+    - add bgp router-id {{ myvars.LOOPBACK_V4 }}
+    - add loopback lo ip address {{ myvars.LOOPBACK_V4 }}/32
+    - add bgp ipv4 unicast network {{ myvars.LOOPBACK_V4 }}/32
+    - add loopback lo ipv6 address {{ myvars.LOOPBACK_V6 }}/128
+    - add bgp ipv6 unicast network {{ myvars.LOOPBACK_V6 }}/128
+    - add interface {{ AGG_PORTS }} mtu 9216
+    - del interface {{ AGG_PORTS }} ipv6 nd suppress-ra
+    - add bgp neighbor {{ AGG_PORTS }} interface remote-as external 
+    - add bgp ipv4 unicast neighbor {{ AGG_PORTS }} activate 
+    - add bgp ipv6 unicast neighbor {{ AGG_PORTS }} activate 
+    - add bgp l2vpn evpn neighbor {{ AGG_PORTS }} activate
+    atomic: true
+    description: l3-fabric with EVPN
+...

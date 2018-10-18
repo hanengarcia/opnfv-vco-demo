@@ -1,0 +1,178 @@
+---
+- name: Set our hostname correctly
+  hostname:
+    name: opnfv-demo
+  become: true
+- lineinfile:
+    dest: /etc/sysconfig/network
+    regexp: "HOSTNAME="
+    line: "HOSTNAME=opnfv-demo.wb.cumulusnetworks.com"
+  become: true
+
+- name: Add infrastruture admins
+  user:
+    name: "{{ item }}"
+    groups: sudo
+    shell: /bin/bash
+    state: present
+  become: yes
+  with_items:
+  - jrrivers
+  - dcain
+  - hgarciag
+- authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', '{{ inventory_dir }}/keys/{{ item }}') }}"
+  become: yes
+  with_items:
+  - jrrivers
+  - dcain
+  - hgarciag
+
+- name: disable passwords for SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item }}"
+    line: "{{ item }} no"
+  become: yes
+  with_items:
+  - ChallengeResponseAuthentication
+  - PasswordAuthentication
+  - UsePAM
+  - PermitRootLogin
+- service:
+    name: sshd
+    state: restarted
+  become: yes   
+
+- name: deploy the fabric facing interface
+  copy:
+    src: ifcfg-enp6s0f0
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  register: _ifcfg
+- shell: ifdown enp6s0f0 && ifup enp6s0f0
+  become: yes
+  when: _ifcfg|changed
+  
+- name: deploy the internet facing interface
+  copy:
+    src: ifcfg-enp6s0f1
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  register: _ifcfg
+- shell: ifdown enp6s0f1 && ifup enp6s0f1
+  become: yes
+  when: _ifcfg|changed
+  
+- name: make sure that we're set up with RedHat subscriptions and repos
+  redhat_subscription:
+    username: jrrivers.cumulusnetworks.com
+    password: dcain-jrrivers
+    pool_ids: 8a85f98c5fdd23ab015fdef579082046
+    state: present
+  become: yes
+  register: _registered
+- block:
+  - command: subscription-manager repos --disable=*
+  - command: "subscription-manager repos --enable={{ item }}"
+    with_items: 
+    - rhel-7-server-rpms
+    - rhel-7-server-extras-rpms
+    - rhel-7-server-rh-common-rpms
+  when: _registered|changed
+
+- name: install useful tools and related packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - ipmitool
+  - net-snmp-utils
+  - lldpad
+  - emacs
+  become: yes
+- copy:
+    src: "{{ inventory_dir }}/files/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    group: wheel
+    mode: "u+rwx,g=rx,o=r"
+  become: yes
+  with_items:
+  - opnfv-ipmi
+  - opnfv-pdu
+  - opnfv-console
+  - opnfv-lldpme
+
+- name: Set up forwarding to the PDU and console for opnfv-pdu and opnfv-console
+  shell: "ip route replace {{ item }}/32 via 192.168.0.254"
+  become: yes
+  ignore_errors: yes
+  with_items:
+  - 172.16.0.23
+  - 172.16.0.21
+  - 172.16.11.2
+  - 172.16.13.2
+
+- name: Get LLDP going on all of the interfaces
+  service:
+    name: lldpad
+    state: restarted
+    enabled: yes
+  become: yes
+- blockinfile:
+    dest: /etc/rc.local
+    insertbefore: "exit 0"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK lldpad on select interfaces"
+    block: |
+      /usr/sbin/opnfv-lldpme eno2
+      /usr/sbin/opnfv-lldpme enp6s0f0
+      /usr/sbin/opnfv-lldpme enp6s0f1
+  become: true
+- shell: /usr/sbin/opnfv-lldpme {{ item }}
+  become: yes
+  with_items:
+  - eno2
+  - enp6s0f0
+  - enp6s0f1
+
+# - name: cluster hosts file
+#   copy:
+#     src: "{{ inventory_dir }}/files/hosts"
+#     dest: "/etc/hosts"
+#   become: yes
+# 
+# - name: DNS (named/bind9) setup
+#   copy:
+#     src: "{{ inventory_dir }}/files/db.lab.local"
+#     dest: "/etc/bind/zones"
+#   become: yes
+#   register: _dns
+# - service:
+#     name: bind9
+#     state: restarted
+#   become: yes
+#   when: _dns|changed
+#  
+# - name: DHCP for all cluster addressing
+#   copy:
+#     src: "{{ inventory_dir}}/files/dhcpd.hosts"
+#     dest: "/etc/dhcp"
+#   become: yes
+#   register: _hosts
+# - copy:
+#     src: "{{ inventory_dir }}/files/dhcpd.pools"
+#     dest: "/etc/dhcp"
+#   become: yes
+#   register: _pools
+# - service:
+#     name: isc-dhcp-server
+#     enabled: yes
+#     state: restarted
+#   become: yes
+#   when: _hosts|changed or _pools|changed
+# 
+...
