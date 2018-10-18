@@ -1,4 +1,4 @@
-# Infrastructure Prep
+# Physical Networking
 
 This Ansible setup prepares network switching layer for the OPNFV use-case.  There is
 a three rack configuration with dual leaf switches per each rack, two high speed
