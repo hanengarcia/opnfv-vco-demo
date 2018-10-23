@@ -4,4 +4,4 @@ Leading up to the OPNFV Summit in Beijing, 25 volunteers from 10 companies in th
 
 # OPNFV VCO Demo for ONS Summit, September 25-27, 2018 in Amsterdam
 
-We are getting ready for VCO mobile demo ...
+See https://youtu.be/ClQ7nBKfL5I for our keynote demo demonstrating a call on stage!

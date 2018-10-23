@@ -1,0 +1,35 @@
+resource_registry:
+  OS::TripleO::Services::CephMon: /usr/share/openstack-tripleo-heat-templates/docker/services/ceph-ansible/ceph-mon.yaml
+  OS::TripleO::Services::CephOSD: /usr/share/openstack-tripleo-heat-templates/docker/services/ceph-ansible/ceph-osd.yaml
+  OS::TripleO::Services::CephClient: /usr/share/openstack-tripleo-heat-templates/docker/services/ceph-ansible/ceph-client.yaml
+
+parameter_defaults:
+  CinderEnableIscsiBackend: false
+  CinderEnableRbdBackend: true
+  CinderBackupBackend: ceph
+  NovaEnableRbdBackend: true
+  GlanceBackend: rbd
+  GnocchiBackend: rbd
+
+  CephPoolDefaultPgNum: 32
+  CephConfigOverrides:
+    journal_size: 5120
+    max_open_files: 131072
+    mon_osd_full_ratio: 90
+    osd_recovery_op_priority: 3
+    osd_recovery_max_active: 3
+    osd_max_backfills: 1
+
+  CephPools:
+    - {"name": backups, "pg_num": 16, "pgp_num": 16}
+    - {"name": images, "pg_num": 32, "pgp_num": 32}
+    - {"name": metrics, "pg_num": 16, "pgp_num": 16}
+    - {"name": vms, "pg_num": 64, "pgp_num": 64}
+    - {"name": volumes, "pg_num": 64, "pgp_num": 64}
+
+  CephAnsibleDisksConfig:
+    devices:
+      - /dev/sdb
+      - /dev/sdc
+      - /dev/sdd
+    osd_scenario: collocated
