@@ -1,0 +1,26 @@
+parameter_defaults:
+
+#### GENERIC ENVIRONMENT OVERRIDES ####
+  CephStorageCount: 3
+  CloudName: vco2.local.lab
+  CloudDomain: local.lab
+  ComputeCount: 6
+  ControllerCount: 3
+  ControllerExtraConfig:
+    #ceilometer::collector::collector_workers: 3
+    #ceilometer::dispatcher::gnocchi::archive_policy: low_overhead
+    #ceilometer::expirer::time_to_live: 7776000
+    #gnocchi::metricd::workers: 12
+    #gnocchi::storage::metric_processing_delay: 30
+    #gnocchi::wsgi::apache::threads: 1
+    #gnocchi::wsgi::apache::workers: 12
+    #keystone::token_provider: 'fernet'
+    #MysqlMaxConnections: 7624
+    neutron::agents::dhcp::enable_isolated_metadata: true
+    #RabbitFDLimit: 65436
+  #ExtraConfig:
+    #neutron::dns_domain: local.lab
+    #nova::network::neutron::dhcp_domain: local.lab
+  #MysqlMaxConnections: 8192
+  NovaComputeLibvirtType: 'kvm'
+  TimeZone: 'America/Los_Angeles'

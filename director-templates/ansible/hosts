@@ -1,0 +1,23 @@
+[controllers]
+controller-0 ansible_host=172.21.25.143 ansible_ssh_user=heat-admin host_key_checking=False
+controller-1 ansible_host=172.21.25.144 ansible_ssh_user=heat-admin host_key_checking=False
+controller-2 ansible_host=172.21.25.145 ansible_ssh_user=heat-admin host_key_checking=False
+
+[computes]
+compute-0 ansible_host=172.21.25.146 ansible_ssh_user=heat-admin host_key_checking=False
+compute-1 ansible_host=172.21.25.147 ansible_ssh_user=heat-admin host_key_checking=False
+compute-2 ansible_host=172.21.25.148 ansible_ssh_user=heat-admin host_key_checking=False
+compute-3 ansible_host=172.21.25.149 ansible_ssh_user=heat-admin host_key_checking=False
+compute-4 ansible_host=172.21.25.150 ansible_ssh_user=heat-admin host_key_checking=False
+compute-5 ansible_host=172.21.25.151 ansible_ssh_user=heat-admin host_key_checking=False
+
+[storages]
+cephstorage-0 ansible_host=172.21.25.140 ansible_ssh_user=heat-admin host_key_checking=False
+cephstorage-1 ansible_host=172.21.25.141 ansible_ssh_user=heat-admin host_key_checking=False
+cephstorage-2 ansible_host=172.21.25.142 ansible_ssh_user=heat-admin host_key_checking=False
+
+#[baremetal]
+#ru ansible_host=192.168.0.37 ansible_ssh_user=heat-admin host_key_checking=False
+#du ansible_host=172.21.25.153 ansible_ssh_user=heat-admin host_key_checking=False
+
+[vms]

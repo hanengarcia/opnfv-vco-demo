@@ -1,0 +1,100 @@
+{
+  "nodes": [
+    {
+      "name": "server-1-1",
+      "pm_addr": "192.168.0.131",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:cephstorage-0,boot_option:local"
+    },
+    {
+      "name": "server-1-2",
+      "pm_addr": "192.168.0.132",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:cephstorage-1,boot_option:local"
+    },
+    {
+      "name": "server-1-3",
+      "pm_addr": "192.168.0.133",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:cephstorage-2,boot_option:local"
+    },
+    {
+      "name": "server-1-4",
+      "pm_addr": "192.168.0.134",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:controller-0,boot_option:local"
+    },
+    {
+      "name": "server-1-5",
+      "pm_addr": "192.168.0.135",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-4,boot_option:local"
+    },
+    {
+      "name": "server-1-6",
+      "pm_addr": "192.168.0.136",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-5,boot_option:local"
+    },
+    {
+      "name": "server-2-1",
+      "pm_addr": "192.168.0.141",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:controller-1,boot_option:local"
+    },
+    {
+      "name": "server-2-2",
+      "pm_addr": "192.168.0.142",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:controller-2,boot_option:local"
+    },
+    {
+      "name": "server-2-3",
+      "pm_addr": "192.168.0.143",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-0,boot_option:local"
+    },
+    {
+      "name": "server-2-4",
+      "pm_addr": "192.168.0.144",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-1,boot_option:local"
+    },
+    {
+      "name": "server-s-1",
+      "pm_addr": "192.168.0.151",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-2,boot_option:local"
+    },
+    {
+      "name": "server-s-2",
+      "pm_addr": "192.168.0.152",
+      "pm_password": "admin",
+      "pm_type": "pxe_ipmitool",
+      "pm_user": "admin",
+      "capabilities": "node:compute-3,boot_option:local"
+    }
+  ]
+}

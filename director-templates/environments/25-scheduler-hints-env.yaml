@@ -1,0 +1,22 @@
+parameter_defaults:
+  CephStorageSchedulerHints: {'capabilities:node': 'cephstorage-%index%'}
+  ComputeSchedulerHints: {'capabilities:node': 'compute-%index%'}
+  ControllerSchedulerHints: {'capabilities:node': 'controller-%index%'}
+
+  HostnameMap:
+    vco2-controller-0: vco2-controller0
+    vco2-controller-1: vco2-controller1
+    vco2-controller-2: vco2-controller2
+    vco2-compute-0: vco2-compute0
+    vco2-compute-1: vco2-compute1
+    vco2-compute-2: vco2-compute2
+    vco2-compute-3: vco2-compute3
+    vco2-compute-4: vco2-compute4
+    vco2-compute-5: vco2-compute5
+    vco2-cephstorage-0: vco2-ceph0
+    vco2-cephstorage-1: vco2-ceph1
+    vco2-cephstorage-2: vco2-ceph2
+
+  OvercloudCephStorageFlavor: baremetal
+  OvercloudComputeFlavor: baremetal
+  OvercloudControllerFlavor: baremetal

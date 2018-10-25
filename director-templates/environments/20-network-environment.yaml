@@ -1,0 +1,75 @@
+resource_registry:
+  OS::TripleO::Compute::Net::SoftwareConfig: /home/stack/templates/nic-configs/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: /home/stack/templates/nic-configs/controller.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: /home/stack/templates/nic-configs/ceph-storage.yaml
+
+# Network definitions  
+  OS::TripleO::Network::External: /usr/share/openstack-tripleo-heat-templates/network/external.yaml
+  OS::TripleO::Network::InternalApi: /usr/share/openstack-tripleo-heat-templates/network/internal_api.yaml
+  OS::TripleO::Network::StorageMgmt: /usr/share/openstack-tripleo-heat-templates/network/storage_mgmt.yaml
+  OS::TripleO::Network::Storage: /usr/share/openstack-tripleo-heat-templates/network/storage.yaml
+  OS::TripleO::Network::Tenant: /usr/share/openstack-tripleo-heat-templates/network/tenant.yaml
+
+# Port assignments for the VIPs
+  OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Network::Ports::InternalApiVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/vip.yaml
+
+# Port assignments for service virtual IPs for the controller role
+  OS::TripleO::Controller::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/vip.yaml
+# Port assignments for the controller role
+  OS::TripleO::Controller::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Controller::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Controller::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Controller::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::Controller::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+# Port assignments for the Compute role
+  OS::TripleO::Compute::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::Compute::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::Compute::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::Compute::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Compute::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+# Port assignments for the Ceph storage role
+  OS::TripleO::CephStorage::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/external.yaml
+  OS::TripleO::CephStorage::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::CephStorage::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::CephStorage::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage_mgmt.yaml
+  OS::TripleO::CephStorage::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+
+parameter_defaults:
+  ExternalNetCidr: '172.21.25.0/24'
+  InternalApiNetCidr: '192.168.120.0/24'
+  StorageNetCidr: '192.168.130.0/24'
+  StorageMgmtNetCidr: '192.168.140.0/24'
+  TenantNetCidr: '192.168.150.0/24'
+  ControlPlaneSubnetCidr: '24'
+
+  # Leave room if the external network is also used for floating IPs
+  ExternalAllocationPools: [{'start': '172.21.25.155', 'end': '172.21.25.170'}]
+  InternalApiAllocationPools: [{'start': '192.168.120.10', 'end': '192.168.120.120'}]
+  StorageAllocationPools: [{'start': '192.168.130.10', 'end': '192.168.130.120'}]
+  StorageMgmtAllocationPools: [{'start': '192.168.140.10', 'end': '192.168.140.120'}]
+  TenantAllocationPools: [{'start': '192.168.150.10', 'end': '192.168.150.120'}]
+
+  ExternalInterfaceDefaultRoute: '172.21.25.1'
+  ControlPlaneDefaultRoute: 192.168.66.18
+  EC2MetadataIp: 192.168.66.18
+  DnsServers: ["192.168.0.254","8.8.8.8"]
+  NtpServer: ['0.rhel.pool.ntp.org','1.rhel.pool.ntp.org','2.rhel.pool.ntp.org']
+
+  ExternalNetworkVlanID: 25
+  InternalApiNetworkVlanID: 120
+  StorageNetworkVlanID: 130
+  StorageMgmtNetworkVlanID: 140
+  TenantNetworkVlanID: 150
+
+  NeutronExternalNetworkBridge: "''"
+  BondInterfaceOvsOptions: "mode=active-backup miimon=150"
+  NeutronNetworkType: 'vxlan,vlan'
+  NeutronTunnelTypes: 'vxlan'
+  NeutronBridgeMappings: 'datacentre:br-ex'
+  #OpenDaylightProviderMappings: 'datacentre:br-ex'
