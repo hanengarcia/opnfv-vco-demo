@@ -1,0 +1,6 @@
+TYPE=Ethernet
+NAME=br0-enp6s0f1
+UUID=60b581b1-15d8-49f2-bb1c-1b8f5b3eae51
+DEVICE=enp6s0f1
+ONBOOT=yes
+BRIDGE=br0
