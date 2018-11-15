@@ -1,0 +1,6 @@
+TYPE=Ethernet
+NAME=br-prov-eno2
+UUID=fdb15e93-9758-4dd5-94a7-0c946fb1e061
+DEVICE=eno2
+ONBOOT=yes
+BRIDGE=br-prov

@@ -46,6 +46,13 @@
     state: restarted
   become: yes   
 
+- name: Network domain configuration
+  copy:
+    src: network
+    dest: "/etc/sysconfig/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+
 - name: deploy the fabric facing interface
   copy:
     src: ifcfg-enp6s0f0
@@ -68,6 +75,46 @@
   become: yes
   when: _ifcfg|changed
   
+- name: Install the provisioning bridge
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  with_items:
+  - ifcfg-br-prov-eno2
+  - route-br-prov
+- copy:
+    src: ifcfg-br-prov
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  register: _ifcfg
+- shell: ifdown br-prov && ifup br-prov
+  become: yes
+  when: _ifcfg|changed
+
+- name: Install the OpenStack bridges
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  with_items:
+  - ifcfg-br0
+  - ifcfg-br0.25
+  - ifcfg-br0.26
+  - ifcfg-br0.67
+- copy:
+    src: ifcfg-br0-enp6s0f1
+    dest: "/etc/sysconfig/network-scripts/"
+    mode: "u+rw,g=r,o=r"
+  become: yes
+  register: _ifcfg
+- shell: ifdown br0 && ifup br0
+  become: yes
+  when: _ifcfg|changed
+
 - name: make sure that we're set up with RedHat subscriptions and repos
   redhat_subscription:
     username: jrrivers.cumulusnetworks.com

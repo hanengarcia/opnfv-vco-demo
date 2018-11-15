@@ -12,3 +12,4 @@ UUID=1e265391-06b6-44f3-bdca-7a135fe7d281
 DEVICE=enp6s0f0
 ONBOOT="yes"
 NM_CONTROLLED="no"
+ZONE=public
