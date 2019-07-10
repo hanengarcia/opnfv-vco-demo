@@ -7,8 +7,12 @@
 - name: VCO OAM Setup
   hosts: localhost
   gather_facts: False
-  tasks:
-    - import_playbook: oam_layer/project.yml
-    - import_playbook: oam_layer/networks.yml
+
+- name: Create project
+  import_playbook: oam_layer/project.yml
+  
+- name: Create networks
+  import_playbook: oam_layer/networks.yml
+
 #    - import_playbook: oam_layer/tower.yml
 #    - import_playbook: oam_layer/worker.yml

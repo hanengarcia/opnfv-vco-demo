@@ -1,0 +1,82 @@
+---
+# Create a new tenant project and user
+#
+#
+#
+
+- name: vCPE Service Chain - create tenant project and user
+  hosts: localhost
+  gather_facts: False
+  vars_prompt:
+
+    - name: "project_name"
+      prompt: "Enter project name"
+      default: "aproject"
+
+    - name: "user_name"
+      prompt: "Enter user name"
+      default: "anuser"
+
+  tasks:
+
+    - debug: var=ansible_python_interpreter
+
+    - name: Upgrade default quotas
+      command: neutron quota-update --network 30 --subnet 30 --security-group 30
+
+    - name: Create the project
+      os_project:
+        state: present
+        name: "{{ project_name }}"
+        enabled: True
+      register: os_project
+
+    - name: set project quotas
+      command: openstack quota set --ram 1024000 --instances 100 --key-pairs 30 --floating-ips 7 --cores 200 "{{ os_project }}"
+
+    - name: Create the role user
+      os_keystone_role:
+        state: present
+        name: user
+
+    - name: Create the user
+      os_user:
+        state: present
+        name: "{{ user_name }}"
+        password: "{{ lookup('password', '/tmp/passwordfile chars=ascii_letters,digits') }}"
+        email: "{{ user_name }}@ispnet.com"
+        default_project: "{{ project_name }}"
+      register: os_user
+
+    - name: Configure project's admin
+      os_user_role:
+        user: "{{ user_name }}"
+        role: admin
+        project: "{{ os_project }}"
+
+    - name: Configure project's user
+      os_user_role:
+        user: "{{ user_name }}"
+        role: user
+        project: "{{ os_project }}"
+
+#    - name: Add ansible public key
+#      os_keypair:
+#        state: present
+#        name: ansible_key
+#        public_key_file: key/id_rsa.pub
+
+    - name: Add SSH rule to default security group
+      os_security_group_rule:
+        security_group: "default"
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Add ICMP rule to default security group
+      os_security_group_rule:
+        security_group: "default"
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+

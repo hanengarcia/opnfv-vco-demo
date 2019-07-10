@@ -7,9 +7,13 @@
 - name: Evolved Packet Core
   hosts: localhost
   gather_facts: False
-  tasks:
-    - import_playbook: epc_layer/project.yml
-    - import_playbook: epc_layer/networks.yml
+
+- name: Create project
+  import_playbook: epc_layer/project.yml
+  
+- name: Create networks
+  import_playbook: epc_layer/networks.yml
+
 #    - import_playbook: epc_layer/licence_server.yml
 #    - import_playbook: epc_layer/hss.yml
 #    - import_playbook: epc_layer/mme.yml
