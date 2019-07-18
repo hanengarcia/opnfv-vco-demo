@@ -1,0 +1,237 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*.intf
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+    # The primary network interface
+
+# The primary network interface
+auto eth0
+iface eth0
+
+auto eth1
+iface eth1
+    link-autoneg on
+    link-speed 1000
+
+auto swp1
+iface swp1
+    bridge-access 18
+    link-autoneg off
+    link-speed 1000
+
+auto swp2
+iface swp2
+    bridge-access 18
+    link-speed 1000
+
+auto swp3
+iface swp3
+    bridge-access 18
+    link-speed 1000
+
+auto swp4
+iface swp4
+    link-autoneg on
+
+auto swp5
+iface swp5
+    link-autoneg on
+
+auto swp6
+iface swp6
+    link-autoneg on
+
+auto swp7
+iface swp7
+    link-autoneg on
+
+auto swp8
+iface swp8
+    link-autoneg on
+
+auto swp9
+iface swp9
+    link-autoneg on
+
+auto swp10
+iface swp10
+    link-autoneg on
+
+auto swp11
+iface swp11
+    link-autoneg on
+
+auto swp12
+iface swp12
+    link-autoneg on
+
+auto swp13
+iface swp13
+    link-autoneg on
+
+auto swp14
+iface swp14
+    link-autoneg on
+
+auto swp15
+iface swp15
+    link-autoneg on
+
+auto swp16
+iface swp16
+    link-autoneg on
+
+auto swp17
+iface swp17
+    link-autoneg on
+
+auto swp18
+iface swp18
+    link-autoneg on
+
+auto swp19
+iface swp19
+    link-autoneg on
+
+auto swp20
+iface swp20
+    link-autoneg on
+
+auto swp21
+iface swp21
+    link-autoneg on
+
+auto swp22
+iface swp22
+    link-autoneg on
+
+auto swp23
+iface swp23
+    link-autoneg on
+
+auto swp24
+iface swp24
+    link-autoneg on
+
+auto swp25
+iface swp25
+    link-autoneg on
+
+auto swp26
+iface swp26
+    link-autoneg on
+
+auto swp27
+iface swp27
+    link-autoneg on
+
+auto swp28
+iface swp28
+    link-autoneg on
+
+auto swp29
+iface swp29
+    link-autoneg on
+
+auto swp30
+iface swp30
+    link-autoneg on
+
+auto swp31
+iface swp31
+    link-autoneg on
+
+auto swp32
+iface swp32
+    link-autoneg on
+
+auto swp33
+iface swp33
+    link-autoneg on
+
+auto swp34
+iface swp34
+    link-autoneg on
+
+auto swp35
+iface swp35
+    link-autoneg on
+
+auto swp36
+iface swp36
+    link-autoneg on
+
+auto swp37
+iface swp37
+    link-autoneg on
+
+auto swp38
+iface swp38
+    link-autoneg on
+
+auto swp39
+iface swp39
+    link-autoneg on
+
+auto swp40
+iface swp40
+    link-autoneg on
+
+auto swp41
+iface swp41
+    link-autoneg on
+
+auto swp42
+iface swp42
+    link-autoneg on
+
+auto swp43
+iface swp43
+    link-autoneg on
+
+auto swp44
+iface swp44
+    link-autoneg on
+
+auto swp45
+iface swp45
+    link-autoneg on
+
+auto swp46
+iface swp46
+
+auto swp47
+iface swp47
+    link-autoneg on
+
+auto swp48
+iface swp48
+
+auto swp49
+iface swp49
+
+auto swp52
+iface swp52
+
+auto bridge
+iface bridge
+    bridge-ports eth1 swp1 swp49 swp52 swp2 swp3
+    bridge-vids 1 18
+    bridge-vlan-aware yes
+
+auto vlan1
+iface vlan1
+    vlan-id 1
+    vlan-raw-device bridge
+
+auto vlan18
+iface vlan18
+    address 192.168.18.1/24
+    gateway 192.168.18.129
+    vlan-id 18
+    vlan-raw-device bridge
+

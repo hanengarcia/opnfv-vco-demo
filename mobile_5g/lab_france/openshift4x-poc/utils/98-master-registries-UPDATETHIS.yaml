@@ -1,0 +1,48 @@
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: 98-master-registries
+spec:
+  config:
+    ignition:
+      config: {}
+      security:
+        tls: {}
+      timeouts: {}
+      version: 2.2.0
+    networkd: {}
+    passwd: {}
+    storage: {
+            "files": [
+                {
+                    "path": "/etc/containers/registries.conf",
+                    "filesystem": "root",
+                    "mode": 420,
+                    "contents": {
+                    "source": "data:;base64,<BASE64_REGISTRIES_CONF_FILE_HERE>"
+                    }
+                },
+                {
+                    "path": "/etc/pki/ca-trust/source/anchors/registry.ocp4poc.nsa.eurecom.fr.crt",
+                    "filesystem": "root",
+                    "mode": 420,
+                    "contents": {
+                    "source": "data:;base64,<BASE64_REGISTRY_CA_HERE>" 
+                    }
+                }
+            ]
+        }
+    systemd: {
+        "units": [
+            {
+                "contents": "[Unit]\nDescription=Update system CA\nAfter=syslog.target network.target\n\n[Service]\nType=oneshot\nExecStart=/usr/bin/update-ca-trust\nRemainAfterExit=true\n\n[Install]\nWantedBy=multi-user.target\n",
+                "enabled": true,
+                "name": "update-ca.service"
+            }
+        ]
+    }
+  osImageURL: ""

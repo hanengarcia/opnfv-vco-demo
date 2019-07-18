@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+
+if [ "${IF_ADDRESS}" = "" ] ; then
+  exit 0
+fi
+
+. /lib/lsb/init-functions
+
+IPUP=0
+DOWN=0
+
+if [ -f /etc/default/arping ] ; then 
+	. /etc/default/arping
+fi
+
+if [ $IPUP = 0 ]; then
+	exit 0
+fi
+
+log_action_begin_msg "Using arping to check duplicity of ${IF_ADDRESS}"
+
+if arping -c 1 -d -I ${IFACE} ${IF_ADDRESS} > /dev/null ; then
+  if [ $DOWN = 1 ]; then
+  	ifconfig ${IFACE} down
+	msg="Bringing ${IFACE} down. "
+  fi
+  msg=${msg}"Another computer is already using ${IF_ADDRESS}"
+  status=1
+else
+  msg="No duplicates found"
+  status=0
+fi
+
+log_action_end_msg ${status} "${msg}"
+
+[ ${status} = 0 ]

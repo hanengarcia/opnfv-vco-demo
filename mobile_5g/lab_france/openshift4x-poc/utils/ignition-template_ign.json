@@ -1,0 +1,18 @@
+{
+    "ignition": {
+        "version": "2.2.0",
+        "config": {
+            "append": [
+                {
+                    "source": "https://bastion.nsa.eurecom.fr:8000/worker.ign",
+                    "verification": {}
+                }
+            ]
+        }
+    },
+    "networkd": {},
+    "passwd": {},
+    "storage": {},
+    "systemd": {}
+}
+}

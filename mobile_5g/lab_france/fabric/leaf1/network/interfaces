@@ -1,0 +1,139 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*.intf
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+
+iface eth1 inet dhcp
+
+iface eth2 inet dhcp
+
+auto swp1
+iface swp1
+
+auto swp2
+iface swp2
+    link-speed 1000
+
+auto swp3
+iface swp3
+
+auto swp4
+iface swp4
+
+auto swp5
+iface swp5
+
+auto swp6
+iface swp6
+
+auto swp7
+iface swp7
+
+auto swp8
+iface swp8
+
+auto swp10
+iface swp10
+
+auto swp49
+iface swp49
+
+auto swp50
+iface swp50
+
+auto swp51
+iface swp51
+
+auto swp52
+iface swp52
+
+auto swp53
+iface swp53
+
+auto bond-to-babylon
+iface bond-to-babylon
+    bond-slaves swp8
+    bridge-access 18
+    clag-id 1
+
+auto bond-to-dedale
+iface bond-to-dedale
+    bond-slaves swp6
+    bridge-access 18
+    clag-id 3
+
+auto bond-to-ettus1
+iface bond-to-ettus1
+    bond-slaves swp3
+    bridge-access 18
+    clag-id 6
+
+auto bond-to-ettus2
+iface bond-to-ettus2
+    bond-slaves swp4
+    bridge-access 18
+    clag-id 7
+
+auto bond-to-iliade
+iface bond-to-iliade
+    bond-slaves swp2
+    bridge-access 18
+    clag-id 9
+
+auto bond-to-lynx
+iface bond-to-lynx
+    bond-slaves swp10
+    bridge-access 18
+    clag-id 8
+
+auto bond-to-meduse
+iface bond-to-meduse
+    bond-slaves swp7
+    bridge-access 18
+    clag-id 5
+
+auto bond-to-pegase
+iface bond-to-pegase
+    bond-slaves swp1
+    bridge-access 18
+    clag-id 2
+
+auto bond-to-perse
+iface bond-to-perse
+    bond-slaves swp5
+    bridge-access 18
+    clag-id 4
+
+auto bridge
+iface bridge
+    bridge-ports bond-to-babylon bond-to-dedale bond-to-pegase bond-to-perse peerlink swp49 bond-to-meduse bond-to-ettus1 bond-to-ettus2 bond-to-lynx bond-to-iliade
+    bridge-vids 18
+    bridge-vlan-aware yes
+
+auto peerlink
+iface peerlink
+    bond-slaves swp50 swp53
+
+auto peerlink.4094
+iface peerlink.4094
+    address 169.254.1.1/30
+    clagd-backup-ip 169.254.1.2
+    clagd-peer-ip 169.254.1.2
+    clagd-priority 1000
+    clagd-sys-mac 44:38:39:ff:00:01
+
+auto vlan18
+iface vlan18
+    address 192.168.18.2/24
+    gateway 192.168.18.129
+    vlan-id 18
+    vlan-raw-device bridge
+
