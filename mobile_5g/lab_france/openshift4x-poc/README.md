@@ -54,15 +54,21 @@ $ ./oc adm certificate approve <crt-name>
 
 | NODE      | IP ADDRESS     | HOSTNAME    |
 |:----------|:---------------|:------------|
-| bootstrap | 192.168.18.120 | dedale      |
-| master-0  | 192.168.18.116 | pegase      |
-| master-1  | 192.168.18.1XX | icar        |
-| master-2  | 192.168.18.1XX | minos       |
-| worker-0  | 192.168.18.118 | perse       |
-| worker-1  | 192.168.18.119 | meduse      |
-| worker-2  | 192.168.18.120 | dedale      |
-| worker-3  | 192.168.18.117 | babylon (RT)|
+| bastion   | 192.168.18.129 | iliade      |
+| bootstrap | 192.168.18.130 | iliade (VM) |
+| master-0  | 192.168.18.10  | pegase      |
+| master-1  | 192.168.18.11  | icar        |
+| master-2  | 192.168.18.12  | minos       |
+| worker-0  | 192.168.18.110 | perse       |
+| worker-1  | 192.168.18.111 | meduse      |
+| worker-2  | 192.168.18.112 | dedale      |
+| worker-3  | 192.168.18.113 | babylon (RT)|
 
+| FABRIC    | IP ADDRESS     |
+|:----------|:---------------|
+| spine     | 192.168.18.1   |
+| leaf1     | 192.168.18.2   |
+| leaf2     | 192.168.18.3   |
 
 ***NOTE:*** For easy customization, clone this repo to your Bastion Node.
 
