@@ -9,5 +9,5 @@ spec:
   - ReadWriteMany 
   nfs: 
     path: /opt/nfs/image-registry  
-    server: 192.168.1.1
+    server: 192.168.18.129
   persistentVolumeReclaimPolicy: Retain 
