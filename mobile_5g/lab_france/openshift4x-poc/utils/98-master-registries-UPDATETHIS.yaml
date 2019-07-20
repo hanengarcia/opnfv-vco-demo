@@ -27,7 +27,7 @@ spec:
                     }
                 },
                 {
-                    "path": "/etc/pki/ca-trust/source/anchors/registry.ocp4poc.nsa.eurecom.fr.crt",
+                    "path": "/etc/pki/ca-trust/source/anchors/registry.5glab.nsa.eurecom.fr.crt",
                     "filesystem": "root",
                     "mode": 420,
                     "contents": {

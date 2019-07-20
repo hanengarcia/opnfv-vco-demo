@@ -38,7 +38,7 @@ get_helm() {
 build_tiller() {
     get_helm 
     if [ -z "${KUBECONFIG}"]; then
-        echo "ERROR: Set KUBECONFIG environment variable. (i.e. 'export KUBECONFIG=`pwd`/ocp4poc/auth/kubeconfig' )"
+        echo "ERROR: Set KUBECONFIG environment variable. (i.e. 'export KUBECONFIG=`pwd`/5glab/auth/kubeconfig' )"
     else
         echo "Building container for Tiller ${HELM_VERSION}"
         cp ./utils/Dockerfile.tiller ./Dockerfile.tiller 

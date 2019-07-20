@@ -9,7 +9,7 @@ controlPlane:
   name: master 
   replicas: 3 
 metadata:
-  name: ocp4poc 
+  name: 5glab 
 networking:
   clusterNetworks:
   - cidr: 10.128.0.0/14 

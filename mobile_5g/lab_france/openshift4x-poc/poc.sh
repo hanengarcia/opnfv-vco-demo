@@ -8,7 +8,7 @@ OCP_RELEASE=4.1.4
 RHCOS_BUILD=4.1.0
 WEBROOT=/opt/nginx/html
 TFTPROOT=/var/lib/tftpboot
-POCDIR=ocp4poc
+POCDIR=5glab
 
 #############################################################
 # EXPERIMENTAL
@@ -16,7 +16,7 @@ POCDIR=ocp4poc
 
 #LAST_3_OCP_RELEASES=$(curl -s https://quay.io/api/v1/repository/${UPSTREAM_REPO}/ocp-release/tag/\?limit=3\&page=1\&onlyActiveTags=true | jq -r '.tags[].name')
 
-AIRGAP_REG='registry.ocp4poc.nsa.eurecom.fr:5000'
+AIRGAP_REG='registry.5glab.nsa.eurecom.fr:5000'
 AIRGAP_REPO='ocp4/openshift4'
 UPSTREAM_REPO='openshift-release-dev'   ## or 'openshift'
 AIRGAP_SECRET_JSON='pull-secret-2.json'

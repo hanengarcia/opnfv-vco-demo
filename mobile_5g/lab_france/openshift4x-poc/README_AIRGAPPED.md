@@ -12,7 +12,7 @@
     ```
     <snip>
 
-    pullSecret: '{"auths": {"registry.ocp4poc.nsa.eurecom.fr:5000": {
+    pullSecret: '{"auths": {"registry.5glab.nsa.eurecom.fr:5000": {
         "auth": "ZHVtbXk6ZHVtbXk=",
         "email": "noemail@nsa.eurecom.fr"
         }}}' 
@@ -35,11 +35,11 @@
 
   - Replace `<BASE64_REGISTRY_CA_HERE>` with the base64 (as a single string) output of your self-signed cert of the registry
     ```
-    cat /etc/pki/ca-trust/source/anchors/registry.ocp4poc.nsa.eurecom.fr | base64 -w 0
+    cat /etc/pki/ca-trust/source/anchors/registry.5glab.nsa.eurecom.fr | base64 -w 0
     ```
   - Update `path` section for the certificate name to match the FQDN of the local registry
     ```
-    "path": "/etc/pki/ca-trust/source/anchors/registry.ocp4poc.nsa.eurecom.fr.crt"
+    "path": "/etc/pki/ca-trust/source/anchors/registry.5glab.nsa.eurecom.fr.crt"
     ```
 - Create special folder (fake root) to inject the files into the `bootstrap.ign`
 
@@ -48,7 +48,7 @@
     mkdir -p ./utils/patch-node/etc/pki/ca-trust/source/anchors
 
     cp ./utils/registries.conf ./utils/patch-node/etc/containers
-    cp /etc/docker-distribution/registry/certs/domain.crt ./utils/patch-node/etc/pki/ca-trust/source/anchors/registry.ocp4poc.nsa.eurecom.fr.crt
+    cp /etc/docker-distribution/registry/certs/domain.crt ./utils/patch-node/etc/pki/ca-trust/source/anchors/registry.5glab.nsa.eurecom.fr.crt
     ```
 
     The end result should look something like this:
@@ -63,7 +63,7 @@
             └── ca-trust
                 └── source
                     └── anchors
-                        └── registry.ocp4poc.nsa.eurecom.fr.crt
+                        └── registry.5glab.nsa.eurecom.fr.crt
     ```
 
 
@@ -126,7 +126,7 @@
 
       NOTE: There are two CSR's per Node that need to be accepted.
       ```
-      $ export KUBECONFIG=./ocp4poc/auth/kubeconfig
+      $ export KUBECONFIG=./5glab/auth/kubeconfig
 
       $ ./oc get csr
 

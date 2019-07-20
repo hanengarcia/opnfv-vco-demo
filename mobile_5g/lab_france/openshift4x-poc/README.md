@@ -38,7 +38,7 @@ The initial deployment is as per the following diagram
 
 NOTE: There are two CSR's per Node that need to be accepted.
 ```
-$ export KUBECONFIG=./ocp4poc/auth/kubeconfig
+$ export KUBECONFIG=./5glab/auth/kubeconfig
 
 $ ./oc get csr
 
@@ -50,7 +50,7 @@ $ ./oc adm certificate approve <crt-name>
 # Reference Environment 
 
 - Base Domain: nsa.eurecom.fr
-- Cluster Name: ocp4poc
+- Cluster Name: 5glab
 
 | NODE      | IP ADDRESS     | HOSTNAME    |
 |:----------|:---------------|:------------|
@@ -78,7 +78,7 @@ OCP_RELEASE=4.1.0
 RHCOS_BUILD=4.1.0
 WEBROOT=/opt/nginx/html/
 TFTPROOT=/var/lib/tftpboot/
-POCDIR=ocp4poc
+POCDIR=5glab
 ```
 ***NOTE:*** Next instructions assume this hasn't been customized. 
 
@@ -110,7 +110,7 @@ Reference Load Balancer configurations available in the `utils` folder (use one 
   - Load balancer using [HAProxy](utils/haproxy.cfg) at system level (installed from RPM)
   - Load balancer using HAProxy as [System Container](utils/poc-lb.service) managed by systemd
 
-NOTE: If seeing port bind errors starting the load balancer check SELinux settings:
+***NOTE:*** If seeing port bind errors starting the load balancer check SELinux settings:
 ```
 # List the permited ports
 semanage port -l | grep http_port_t
@@ -146,7 +146,7 @@ semanage port -m -t http_port_t -p tcp 8000
     yum -y install podman skopeo
     ```
 
-- (optional) Setup HAProxy as load balancer
+- Setup HAProxy as load balancer
     - Update `./utils/haproxy.cfg` to match your environment
     ```
     mkdir -pv /opt/haproxy
@@ -154,7 +154,7 @@ semanage port -m -t http_port_t -p tcp 8000
     cp ./utils/haproxy.cfg /opt/haproxy
     cp ./utils/poc-lb.service /etc/systemd/system/poc-lb.service
 
-    podman pull haproxy
+    podman pull registry.connect.redhat.com/haproxytech/haproxy
 
     systemctl daemon-reload
 
@@ -178,7 +178,7 @@ semanage port -m -t http_port_t -p tcp 8000
 
     cp ./utils/poc-pxe-http.service /etc/systemd/system/poc-pxe-http.service
 
-    podman pull nginx
+    podman pull registry.redhat.io/rhscl/nginx-112-rhel7
 
     systemctl daemon-reload
     
@@ -186,6 +186,31 @@ semanage port -m -t http_port_t -p tcp 8000
     systemctl status poc-pxe-http
     systemctl enable poc-pxe-http
     ```
+
+
+## Setting up BIND as local DNS server
+
+mkdir -pv /opt/bind/
+
+chcon -Rt svirt_sandbox_file_t /opt/bind/
+
+podman pull sameersbn/bind
+
+podman run --name poc-bind -it --rm \
+  --publish 53:53/tcp --publish 53:53/udp --publish 192.168.18.129:10000:10000/tcp \
+  --volume /opt/bind:/data \
+  --env ROOT_PASSWORD=redhatvco \
+  sameersbn/bind
+ 
+
+  --env WEBMIN_ENABLED=false
+
+semanage port -a -t http_port_t -p tcp 10000
+
+ssh -D 12345 iliade.eurecom.fr
+
+
+
 
 ## Setting up DNSmasq for PXE Boot
 
@@ -196,11 +221,19 @@ semanage port -m -t http_port_t -p tcp 8000
     port=0
     ...
     ```
+
 2. Configure DHCP and DHCP PXE Options following the reference [dnsmasq-pxe.conf](utils/dnsmasq-pxe.conf)
     ```
     cp ./utils/dnsmasq-pxe.conf /etc/dnsmasq.d/dnsmasq-pxe.conf
     ```
-NOTE: Update `/etc/dnsmasq.d/dnsmasq-pxe.conf` to match environment
+***NOTE:*** Update `/etc/dnsmasq.d/dnsmasq-pxe.conf` to match environment
+
+
+3. Re-start DNSmasq 
+	```
+	systemctl restart dnsmasq
+	```
+
 
 ## Setup PXE Boot Configurations
 
@@ -338,7 +371,7 @@ firewall-cmd --zone=internal  --list-ports
 - A successful installation will show all the cluster operators available. The `image-registry` will not become active until a cluster administrator configure storage for the registry.
 
 ```
-# export KUBECONFIG=./ocp4poc/auth/kubeconfig
+# export KUBECONFIG=./5glab/auth/kubeconfig
 
 # oc get co
 NAME                                 VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
